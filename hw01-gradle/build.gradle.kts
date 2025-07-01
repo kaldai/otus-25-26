@@ -4,9 +4,6 @@ plugins {
     id ("com.github.johnrengelman.shadow")
 }
 
-group = "ru.otus"
-version = "1.0-SNAPSHOT"
-
 dependencies {
     implementation ("com.google.guava:guava")
     implementation("ch.qos.logback:logback-classic")
