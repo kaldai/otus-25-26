@@ -2,6 +2,61 @@ rootProject.name = "otusJava"
 include("hw01-gradle")
 include("L01-gradle")
 
+include("L02-gradle2")
+include("L02-gradle2-libApi")
+include("L02-gradle2-libApiUse")
+include("L02-logging")
+include("L03-qa")
+include("L04-generics")
+//include("L05-collections")
+//include("L06-annotations")
+//include("L08-gc:demo")
+//include("L08-gc:homework")
+//include("L09-docker")
+//include("L10-byteCodes")
+//include("L11-Java8")
+//
+//include("L12-solid")
+//include("L13-creationalPatterns")
+//include("L14-behavioralPatterns")
+//include("L15-structuralPatterns:demo")
+//include("L15-structuralPatterns:homework")
+//
+//include("L16-io:demo")
+//include("L16-io:homework")
+//
+//include("L17-nio")
+//
+//include("L18-jdbc:demo")
+//include("L18-jdbc:homework")
+//include("L19-rdbms")
+//
+//include("L20-hibernate")
+//
+//include("L21-jpql:class-demo")
+//include("L21-jpql:homework-template")
+//
+//include("L22-cache")
+//
+//include("L23-redis:counter")
+//include("L23-redis:data-source")
+//include("L23-redis:data-transformer")
+//include("L23-redis:data-listener")
+//
+//include("L24-webServer")
+//
+//include("L25-di:class-demo")
+//include("L25-di:homework-template")
+//
+//include("L26-springBootMvc")
+//
+//include ("L27-websocket:websocket")
+//include ("L27-websocket:messager")
+//include ("L27-websocket:messager-starter")
+//include ("L27-websocket:application")
+//
+//include ("L28-springDataJdbc")
+
 pluginManagement {
     val jgitver: String by settings
     val dependencyManagement: String by settings
