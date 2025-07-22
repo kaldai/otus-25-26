@@ -8,8 +8,8 @@ include("L02-gradle2-libApiUse")
 include("L02-logging")
 include("L03-qa")
 include("L04-generics")
-//include("L05-collections")
-//include("L06-annotations")
+include("L05-collections")
+include("L06-annotations")
 //include("L08-gc:demo")
 //include("L08-gc:homework")
 //include("L09-docker")
@@ -42,7 +42,7 @@ include("L04-generics")
 //include("L23-redis:data-source")
 //include("L23-redis:data-transformer")
 //include("L23-redis:data-listener")
-//
+
 //include("L24-webServer")
 //
 //include("L25-di:class-demo")
@@ -56,6 +56,13 @@ include("L04-generics")
 //include ("L27-websocket:application")
 //
 //include ("L28-springDataJdbc")
+//
+//include ("L29-threads")
+//include ("L30-JMM")
+//include ("L31-executors")
+//
+//include ("L33-virtualThreads:base")
+//include ("L33-virtualThreads:springBoot")
 
 pluginManagement {
     val jgitver: String by settings
