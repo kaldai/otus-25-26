@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Summator {
-    private Integer sum = 0;
-    private Integer prevValue = 0;
-    private Integer prevPrevValue = 0;
-    private Integer sumLastThreeValues = 0;
-    private Integer someValue = 0;
+    private int sum = 0;
+    private int thisVal = 0;
+    private int someValue = 0;
     // !!! эта коллекция должна остаться. Заменять ее на счетчик нельзя.
     private final List<Data> listValues = new ArrayList<>();
     private final SecureRandom random = new SecureRandom();
@@ -20,36 +18,34 @@ public class Summator {
         if (listValues.size() % 100_000 == 0) {
             listValues.clear();
         }
-        sum += data.getValue() + random.nextInt();
+        thisVal = data.getValue();
+        sum += thisVal + random.nextInt();
 
-        sumLastThreeValues = data.getValue() + prevValue + prevPrevValue;
-
-        prevPrevValue = prevValue;
-        prevValue = data.getValue();
+        int sumLastThreeValues = thisVal * 3 - 3;
 
         for (var idx = 0; idx < 3; idx++) {
-            someValue += (sumLastThreeValues * sumLastThreeValues / (data.getValue() + 1) - sum);
+            someValue += (sumLastThreeValues * sumLastThreeValues / (thisVal + 1) - sum);
             someValue = Math.abs(someValue) + listValues.size();
         }
     }
 
-    public Integer getSum() {
+    public int getSum() {
         return sum;
     }
 
-    public Integer getPrevValue() {
-        return prevValue;
+    public int getPrevValue() {
+        return thisVal - 1;
     }
 
-    public Integer getPrevPrevValue() {
-        return prevPrevValue;
+    public int getPrevPrevValue() {
+        return thisVal - 2;
     }
 
-    public Integer getSumLastThreeValues() {
-        return sumLastThreeValues;
+    public int getSumLastThreeValues() {
+        return thisVal * 3 - 3;
     }
 
-    public Integer getSomeValue() {
+    public int getSomeValue() {
         return someValue;
     }
 }

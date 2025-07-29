@@ -1,0 +1,43 @@
+256m
+22:13:19.353 [main] INFO ru.calculator.CalcDemo -- spend msec:122478, sec:122
+512m
+22:10:04.008 [main] INFO ru.calculator.CalcDemo -- spend msec:109375, sec:109
+768m
+22:07:38.567 [main] INFO ru.calculator.CalcDemo -- spend msec:110128, sec:110
+1024m
+22:05:07.016 [main] INFO ru.calculator.CalcDemo -- spend msec:114428, sec:114
+1280m
+21:44:15.420 [main] INFO ru.calculator.CalcDemo -- spend msec:104718, sec:104
+1536m
+21:37:23.230 [main] INFO ru.calculator.CalcDemo -- spend msec:103464, sec:103
+1792m
+22:17:45.072 [main] INFO ru.calculator.CalcDemo -- spend msec:109223, sec:109
+2048m
+21:30:42.377 [main] INFO ru.calculator.CalcDemo -- spend msec:107165, sec:107
+
+Получается, что оптимальный размер хипа до оптимизации - 1280m
+
+8m
+23:02:23.298 [main] INFO ru.calculator.CalcDemo -- spend msec:111216, sec:111
+12m
+23:04:57.667 [main] INFO ru.calculator.CalcDemo -- spend msec:94852, sec:94
+16m
+22:59:22.376 [main] INFO ru.calculator.CalcDemo -- spend msec:85236, sec:85
+32m
+22:57:02.148 [main] INFO ru.calculator.CalcDemo -- spend msec:82244, sec:82
+64m
+22:54:07.723 [main] INFO ru.calculator.CalcDemo -- spend msec:77907, sec:77
+128m
+22:51:28.125 [main] INFO ru.calculator.CalcDemo -- spend msec:78092, sec:78
+256m
+22:49:43.851 [main] INFO ru.calculator.CalcDemo -- spend msec:77301, sec:77
+512m
+22:35:27.410 [main] INFO ru.calculator.CalcDemo -- spend msec:72810, sec:72
+768m
+22:32:38.270 [main] INFO ru.calculator.CalcDemo -- spend msec:71710, sec:71
+1024m
+22:30:58.874 [main] INFO ru.calculator.CalcDemo -- spend msec:75203, sec:75
+1280m
+22:28:52.410 [main] INFO ru.calculator.CalcDemo -- spend msec:81676, sec:81
+
+Получается, что оптимальный размер хипа после оптимизации - 64m
