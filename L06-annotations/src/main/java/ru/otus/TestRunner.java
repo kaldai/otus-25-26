@@ -10,6 +10,7 @@ import ru.otus.annotations.Before;
 import ru.otus.annotations.Test;
 import ru.otus.reflection.ReflectionHelper;
 
+@SuppressWarnings("all")
 public class TestRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(TestRunner.class);
