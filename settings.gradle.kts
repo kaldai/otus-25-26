@@ -61,8 +61,32 @@ include("L08-gc:homework")
 //include ("L30-JMM")
 //include ("L31-executors")
 //
+//include ("L32-concurrentCollections:ConcurrentCollections")
+//include ("L32-concurrentCollections:QueueDemo")
+//
 //include ("L33-virtualThreads:base")
 //include ("L33-virtualThreads:springBoot")
+//
+//include ("L34-multiprocess:processes-demo")
+//include ("L34-multiprocess:sockets-demo")
+//include ("L34-multiprocess:rmi-demo")
+//include ("L34-multiprocess:grpc-demo")
+//
+//include ("L35-rabbitMQ:allServicesModels")
+//include ("L35-rabbitMQ:approvalService")
+//include ("L35-rabbitMQ:mainService")
+//
+//include ("L36-NIO")
+//include ("L37-netty")
+//
+//include ("L38-webflux:source")
+//include ("L38-webflux:processor")
+//include ("L38-webflux:client")
+//include ("L38-webflux-chat:client-service")
+//include ("L38-webflux-chat:datastore-service")
+//
+//include ("L39-kafka:consumer")
+//include ("L39-kafka:producer")
 
 pluginManagement {
     val jgitver: String by settings
