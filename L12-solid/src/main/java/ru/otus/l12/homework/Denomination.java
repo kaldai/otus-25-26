@@ -1,5 +1,5 @@
 package ru.otus.l12.homework;
 
-public interface Banknote {
+public interface Denomination {
     int getDenomination();
 }

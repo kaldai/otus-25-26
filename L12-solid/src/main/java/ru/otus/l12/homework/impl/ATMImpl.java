@@ -2,7 +2,7 @@ package ru.otus.l12.homework.impl;
 
 import ru.otus.l12.homework.ATM;
 import ru.otus.l12.homework.ATMStorage;
-import ru.otus.l12.homework.Banknote;
+import ru.otus.l12.homework.Denomination;
 import ru.otus.l12.homework.exception.ATMException;
 
 public class ATMImpl implements ATM {
@@ -14,14 +14,14 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public void deposit(Banknote banknote, int count) {
-        if (banknote == null) {
-            throw new IllegalArgumentException("Banknote cannot be null");
+    public void deposit(Denomination denomination, int count) {
+        if (denomination == null) {
+            throw new IllegalArgumentException("Denomination cannot be null");
         }
         if (count <= 0) {
             throw new IllegalArgumentException("Count must be positive");
         }
-        storage.addBanknotes(banknote, count);
+        storage.addBanknotes(denomination, count);
     }
 
     @Override

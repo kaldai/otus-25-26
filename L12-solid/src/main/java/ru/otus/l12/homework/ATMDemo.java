@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import ru.otus.l12.homework.exception.ATMException;
 import ru.otus.l12.homework.impl.ATMImpl;
 import ru.otus.l12.homework.impl.ATMStorageImpl;
-import ru.otus.l12.homework.impl.RubleBanknote;
+import ru.otus.l12.homework.impl.RubleDenomination;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ATMDemo {
 
@@ -15,16 +17,19 @@ public class ATMDemo {
 
   public static void main(String[] args) {
     // Инициализация банкомата с поддержкой номиналов
-    ATMStorage storage = new ATMStorageImpl(Arrays.asList(100, 200, 500, 1000, 2000, 5000));
+    List<Integer> denominations = Arrays.stream(RubleDenomination.values())
+        .map(RubleDenomination::getDenomination)
+        .collect(Collectors.toList());
+    ATMStorage storage = new ATMStorageImpl(denominations);
     ATM atm = new ATMImpl(storage);
 
     // Внесение денег
-    atm.deposit(RubleBanknote.ONE_HUNDRED, 10);
-    atm.deposit(RubleBanknote.TWO_HUNDRED, 10);
-    atm.deposit(RubleBanknote.FIVE_HUNDRED, 10);
-    atm.deposit(RubleBanknote.ONE_THOUSAND, 10);
-    atm.deposit(RubleBanknote.TWO_THOUSAND, 10);
-    atm.deposit(RubleBanknote.FIVE_THOUSAND, 10);
+    atm.deposit(RubleDenomination.ONE_HUNDRED, 10);
+    atm.deposit(RubleDenomination.TWO_HUNDRED, 10);
+    atm.deposit(RubleDenomination.FIVE_HUNDRED, 10);
+    atm.deposit(RubleDenomination.ONE_THOUSAND, 10);
+    atm.deposit(RubleDenomination.TWO_THOUSAND, 10);
+    atm.deposit(RubleDenomination.FIVE_THOUSAND, 10);
 
     logger.info("Balance after deposit: {} RUB", atm.getBalance());
 

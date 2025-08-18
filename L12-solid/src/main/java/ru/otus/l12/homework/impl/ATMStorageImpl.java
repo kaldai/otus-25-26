@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import lombok.Getter;
 import lombok.NonNull;
 import ru.otus.l12.homework.ATMStorage;
-import ru.otus.l12.homework.Banknote;
+import ru.otus.l12.homework.Denomination;
 import ru.otus.l12.homework.Cell;
 import ru.otus.l12.homework.exception.ATMException;
 
@@ -26,11 +26,11 @@ public class ATMStorageImpl implements ATMStorage {
     }
 
     @Override
-    public void addBanknotes(Banknote banknote, int count) {
+    public void addBanknotes(Denomination denomination, int count) {
 
-        Cell cell = cells.get(banknote.getDenomination());
+        Cell cell = cells.get(denomination.getDenomination());
         if (cell == null) {
-            throw new IllegalArgumentException("Unsupported banknote denomination");
+            throw new IllegalArgumentException("Unsupported denomination denomination");
         }
         cell.add(count);
     }
@@ -38,11 +38,11 @@ public class ATMStorageImpl implements ATMStorage {
     @Override
     public void takeBanknotes(int amount) throws ATMException {
 
-        Map<Banknote, Integer> withdrawalPlan = calculateWithdrawal(amount);
-        for (Map.Entry<Banknote, Integer> entry : withdrawalPlan.entrySet()) {
-            Banknote banknote = entry.getKey();
+        Map<Denomination, Integer> withdrawalPlan = calculateWithdrawal(amount);
+        for (Map.Entry<Denomination, Integer> entry : withdrawalPlan.entrySet()) {
+            Denomination denomination = entry.getKey();
             int count = entry.getValue();
-            cells.get(banknote.getDenomination()).take(count);
+            cells.get(denomination.getDenomination()).take(count);
         }
     }
 
@@ -52,7 +52,7 @@ public class ATMStorageImpl implements ATMStorage {
     }
 
     @Override
-    public Map<Banknote, Integer> calculateWithdrawal(int amount) throws ATMException {
+    public Map<Denomination, Integer> calculateWithdrawal(int amount) throws ATMException {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
@@ -60,7 +60,7 @@ public class ATMStorageImpl implements ATMStorage {
             throw new ATMException("Insufficient funds");
         }
 
-        Map<Banknote, Integer> result = new HashMap<>();
+        Map<Denomination, Integer> result = new HashMap<>();
         int remaining = amount;
 
         Iterator<Map.Entry<Integer, Cell>> iterator = cells.entrySet().iterator();

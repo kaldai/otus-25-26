@@ -1,8 +1,8 @@
 package ru.otus.l12.homework.impl;
 
-import ru.otus.l12.homework.Banknote;
+import ru.otus.l12.homework.Denomination;
 
-public enum RubleBanknote implements Banknote {
+public enum RubleDenomination implements Denomination {
     ONE_HUNDRED(100),
     TWO_HUNDRED(200),
     FIVE_HUNDRED(500),
@@ -12,7 +12,7 @@ public enum RubleBanknote implements Banknote {
 
     private final int denomination;
 
-    RubleBanknote(int denomination) {
+    RubleDenomination(int denomination) {
         this.denomination = denomination;
     }
 
