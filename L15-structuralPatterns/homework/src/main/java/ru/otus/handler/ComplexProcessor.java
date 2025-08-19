@@ -1,7 +1,7 @@
 package ru.otus.handler;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import ru.otus.processor.Processor;
 public class ComplexProcessor implements Handler {
     private static final Logger logger = LoggerFactory.getLogger(ComplexProcessor.class);
 
-    private final List<Listener> listeners = new ArrayList<>();
+    private final List<Listener> listeners = new CopyOnWriteArrayList<>();
     private final List<Processor> processors;
     private final Consumer<Exception> errorHandler;
 
