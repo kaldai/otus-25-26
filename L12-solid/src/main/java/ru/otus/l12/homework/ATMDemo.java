@@ -9,7 +9,6 @@ import ru.otus.l12.homework.impl.RubleDenomination;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ATMDemo {
 
@@ -19,7 +18,7 @@ public class ATMDemo {
     // Инициализация банкомата с поддержкой номиналов
     List<Integer> denominations = Arrays.stream(RubleDenomination.values())
         .map(RubleDenomination::getDenomination)
-        .collect(Collectors.toList());
+        .toList();
     ATMStorage storage = new ATMStorageImpl(denominations);
     ATM atm = new ATMImpl(storage);
 
