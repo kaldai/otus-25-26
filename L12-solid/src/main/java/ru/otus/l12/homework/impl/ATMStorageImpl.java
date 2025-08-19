@@ -9,8 +9,8 @@ import java.util.TreeMap;
 import lombok.Getter;
 import lombok.NonNull;
 import ru.otus.l12.homework.ATMStorage;
-import ru.otus.l12.homework.Denomination;
 import ru.otus.l12.homework.Cell;
+import ru.otus.l12.homework.Denomination;
 import ru.otus.l12.homework.exception.ATMException;
 
 @Getter
