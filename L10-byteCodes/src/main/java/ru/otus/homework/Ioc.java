@@ -4,6 +4,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,26 +19,49 @@ public class Ioc {
     @SuppressWarnings("unchecked")
     public static <T> T createMyClass(Class<T> interfaceClass, T target) {
         return (T) Proxy.newProxyInstance(
-                interfaceClass.getClassLoader(), new Class<?>[] {interfaceClass}, new DemoInvocationHandler(target));
+                interfaceClass.getClassLoader(),
+                new Class<?>[] {interfaceClass},
+                new LoggingInvocationHandler(interfaceClass, target));
     }
 
-    private static class DemoInvocationHandler implements InvocationHandler {
+    private static class LoggingInvocationHandler implements InvocationHandler {
         private final Object target;
-        private final Class<?> targetClass;
+        private final Map<Method, Boolean> loggingMethods = new HashMap<>();
+        private final Set<String> methodsToLog = new HashSet<>();
 
-        DemoInvocationHandler(Object target) {
+        LoggingInvocationHandler(Class<?> interfaceClass, Object target) {
             this.target = target;
-            this.targetClass = target.getClass();
+            cacheLoggingMethods(interfaceClass);
+        }
+
+        private void cacheLoggingMethods(Class<?> interfaceClass) {
+            // Собираем сигнатуры методов с аннотацией @Log в целевом классе
+            for (Method method : target.getClass().getDeclaredMethods()) {
+                if (method.isAnnotationPresent(Log.class)) {
+                    String signature = methodSignature(method);
+                    methodsToLog.add(signature);
+                }
+            }
+
+            // Сопоставляем методы интерфейса с закэшированными сигнатурами
+            for (Method method : interfaceClass.getMethods()) {
+                String signature = methodSignature(method);
+                loggingMethods.put(method, methodsToLog.contains(signature));
+            }
+        }
+
+        private String methodSignature(Method method) {
+            return method.getName()
+                    + Arrays.toString(Arrays.stream(method.getParameterTypes())
+                            .map(Class::getName)
+                            .toArray(String[]::new));
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Method realMethod = targetClass.getMethod(method.getName(), method.getParameterTypes());
-
-            if (realMethod.isAnnotationPresent(Log.class)) {
-                logMethodCall(realMethod, args);
+            if (loggingMethods.getOrDefault(method, false)) {
+                logMethodCall(method, args);
             }
-
             return method.invoke(target, args);
         }
 
