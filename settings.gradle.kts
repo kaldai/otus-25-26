@@ -109,6 +109,8 @@ include("L15-structuralPatterns:homework")
 //include ("L39-kafka:consumer")
 //include ("L39-kafka:producer")
 
+include ("L41-kuber")
+
 pluginManagement {
     val jgitver: String by settings
     val dependencyManagement: String by settings
