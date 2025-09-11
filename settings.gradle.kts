@@ -23,7 +23,7 @@ include("L12-solid")
 include("L15-structuralPatterns:homework")
 //
 //include("L16-io:demo")
-//include("L16-io:homework")
+include("L16-io:homework")
 //
 //include("L17-nio")
 //
@@ -109,7 +109,7 @@ include("L15-structuralPatterns:homework")
 //include ("L39-kafka:consumer")
 //include ("L39-kafka:producer")
 
-include ("L41-kuber")
+//include ("L41-kuber")
 
 pluginManagement {
     val jgitver: String by settings
