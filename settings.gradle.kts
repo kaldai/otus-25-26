@@ -27,8 +27,8 @@ include("L16-io:homework")
 //
 //include("L17-nio")
 //
-//include("L18-jdbc:demo")
-//include("L18-jdbc:homework")
+include("L18-jdbc:demo")
+include("L18-jdbc:homework")
 //include("L19-rdbms")
 //
 //include("L20-hibernate")
