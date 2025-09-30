@@ -3,6 +3,7 @@ package ru.otus.jdbc.mapper;
 import java.lang.reflect.Field;
 import java.util.StringJoiner;
 
+@SuppressWarnings({"java:S1452"})
 public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     private final EntityClassMetaData<?> entityClassMetaData;
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ru.otus.crm.annotations.Id;
 
+@SuppressWarnings({"java:S112", "java:S3011"})
 public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private final Class<T> clazz;
     private final String name;
