@@ -6,7 +6,7 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-core")
     implementation("org.flywaydb:flyway-core")
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql
-    implementation("org.flywaydb:flyway-database-postgresql:10.4.1")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
     implementation("org.postgresql:postgresql")
 
