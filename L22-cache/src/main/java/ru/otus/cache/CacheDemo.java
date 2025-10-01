@@ -3,6 +3,9 @@ package ru.otus.cache;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.cachehw.HwCache;
+import ru.otus.cachehw.HwListener;
+import ru.otus.cachehw.MyCache;
 import ru.otus.core.repository.DataTemplateHibernate;
 import ru.otus.core.repository.HibernateUtils;
 import ru.otus.core.sessionmanager.TransactionManagerHibernate;
@@ -28,7 +31,16 @@ public class CacheDemo {
         var transactionManager = new TransactionManagerHibernate(sessionFactory);
         var clientTemplate = new DataTemplateHibernate<>(Client.class);
 
-        var dbServiceClient = new DbServiceClientWithCacheImpl(transactionManager, clientTemplate);
+        // Создаем кэш и передаем его как зависимость
+        HwCache<String, Client> cache = new MyCache<>();
+
+        // Добавляем слушателя для мониторинга
+        HwListener<String, Client> listener =
+                (key, value, action) -> log.debug("Cache {}: key={}, client={}", action, key, value.getName());
+        cache.addListener(listener);
+
+        var dbServiceClient = new DbServiceClientWithCacheImpl(transactionManager, clientTemplate, cache);
+
         testCachePerformance(dbServiceClient);
     }
 
@@ -37,10 +49,12 @@ public class CacheDemo {
         var savedClient = dbServiceClient.saveClient(client);
         long clientId = savedClient.getId();
 
+        // Первое получение - из БД
         long startTime = System.nanoTime();
         dbServiceClient.getClient(clientId);
         long dbTime = System.nanoTime() - startTime;
 
+        // Второе получение - из кэша
         startTime = System.nanoTime();
         dbServiceClient.getClient(clientId);
         long cacheTime = System.nanoTime() - startTime;
