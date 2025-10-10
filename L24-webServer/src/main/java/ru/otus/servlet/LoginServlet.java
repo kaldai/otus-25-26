@@ -1,8 +1,5 @@
 package ru.otus.servlet;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,24 +26,23 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, Collections.emptyMap()));
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         String name = request.getParameter(PARAM_LOGIN);
         String password = request.getParameter(PARAM_PASSWORD);
 
         if (userAuthService.authenticate(name, password)) {
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
-            response.sendRedirect("/users");
+            session.setAttribute("user", name); // Добавляем атрибут пользователя в сессию
+            response.sendRedirect("/clients"); // Редирект на страницу клиентов
         } else {
-            response.setStatus(SC_UNAUTHORIZED);
+            response.sendRedirect("/login?error=true"); // Редирект обратно на логин с ошибкой
         }
     }
 }
