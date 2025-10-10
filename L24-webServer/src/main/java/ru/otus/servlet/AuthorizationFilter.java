@@ -11,8 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AuthorizationFilter implements Filter {
+    private static final Set<String> PUBLIC_PATHS = new HashSet<>(Arrays.asList("/", "/login", "/static/"));
 
     private ServletContext context;
 
@@ -30,13 +34,24 @@ public class AuthorizationFilter implements Filter {
         String uri = request.getRequestURI();
         this.context.log("Requested Resource:" + uri);
 
+        // Разрешаем доступ к публичным путям без аутентификации
+        if (isPublicPath(uri)) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
         HttpSession session = request.getSession(false);
 
-        if (session == null) {
-            response.sendRedirect("/login");
-        } else {
+        // Проверяем аутентификацию по наличию атрибута "user" в сессии
+        if (session != null && session.getAttribute("user") != null) {
             filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            response.sendRedirect("/login");
         }
+    }
+
+    private boolean isPublicPath(String path) {
+        return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
     }
 
     @Override
