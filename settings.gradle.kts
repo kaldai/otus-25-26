@@ -43,7 +43,7 @@ include("L22-cache")
 //include("L23-redis:data-transformer")
 //include("L23-redis:data-listener")
 
-//include("L24-webServer")
+include("L24-webServer")
 //
 //include("L25-di:class-demo")
 //include("L25-di:homework-template")
