@@ -47,6 +47,7 @@ include("L24-webServer")
 //
 //include("L25-di:class-demo")
 //include("L25-di:homework-template")
+include("L25-di:hw-multiplication-trainer")
 //
 //include("L26-springBootMvc")
 //
