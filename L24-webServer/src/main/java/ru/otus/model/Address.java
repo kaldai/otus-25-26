@@ -1,34 +1,21 @@
 package ru.otus.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "addresses")
+@Table("ADDRESS")
 public class Address {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String street;
-
-    @Column
-    private String city;
-
-    @Column
-    private String postalCode;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id")
-    private Client client;
+    private Long clientId;
 
     public Address() {}
 
-    public Address(String street, String city, String postalCode) {
+    public Address(String street, Long clientId) {
         this.street = street;
-        this.city = city;
-        this.postalCode = postalCode;
+        this.clientId = clientId;
     }
 
     // Геттеры и сеттеры
@@ -48,27 +35,11 @@ public class Address {
         this.street = street;
     }
 
-    public String getCity() {
-        return city;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 }

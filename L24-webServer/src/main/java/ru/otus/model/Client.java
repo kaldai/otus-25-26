@@ -1,36 +1,32 @@
 package ru.otus.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "clients")
+@Table("CLIENT")
 public class Client {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
     private String name;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
-    private List<Address> addresses = new ArrayList<>();
+    @MappedCollection(idColumn = "CLIENT_ID")
+    private Address address;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
-    private List<Phone> phones = new ArrayList<>();
+    @MappedCollection(idColumn = "CLIENT_ID")
+    private Set<Phone> phones = new HashSet<>();
 
     public Client() {}
 
     public Client(String name) {
+        this.name = name;
+    }
+
+    public Client(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -51,19 +47,19 @@ public class Client {
         this.name = name;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public List<Phone> getPhones() {
+    public Set<Phone> getPhones() {
         return phones;
     }
 
-    public void setPhones(List<Phone> phones) {
+    public void setPhones(Set<Phone> phones) {
         this.phones = phones;
     }
 }

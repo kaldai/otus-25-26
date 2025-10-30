@@ -1,30 +1,21 @@
 package ru.otus.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "phones")
+@Table("PHONE")
 public class Phone {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String number;
-
-    @Column
-    private String type;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id")
-    private Client client;
+    private Long clientId;
 
     public Phone() {}
 
-    public Phone(String number, String type) {
+    public Phone(String number, Long clientId) {
         this.number = number;
-        this.type = type;
+        this.clientId = clientId;
     }
 
     // Геттеры и сеттеры
@@ -44,19 +35,11 @@ public class Phone {
         this.number = number;
     }
 
-    public String getType() {
-        return type;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 }

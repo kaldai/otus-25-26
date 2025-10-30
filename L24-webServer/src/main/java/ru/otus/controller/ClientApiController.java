@@ -2,19 +2,12 @@ package ru.otus.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.otus.model.Client;
+import org.springframework.web.bind.annotation.*;
+import ru.otus.dto.ClientDto;
 import ru.otus.service.ClientService;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/api/client")
 public class ClientApiController {
 
     private final ClientService clientService;
@@ -24,31 +17,41 @@ public class ClientApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        List<Client> clients = clientService.getAllClients();
+    public ResponseEntity<List<ClientDto>> getAllClients() {
+        List<ClientDto> clients = clientService.getAllClients();
         return ResponseEntity.ok(clients);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable Long id) {
-        return clientService.getClientById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound()
-                .build());
+    public ResponseEntity<ClientDto> getClientById(@PathVariable Long id) {
+        return clientService
+                .getClientById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
-        Client savedClient = clientService.createClient(client);
+    public ResponseEntity<ClientDto> createClient(@RequestBody ClientDto clientDto) {
+        ClientDto savedClient = clientService.saveClient(clientDto);
         return ResponseEntity.status(201).body(savedClient);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
-        Client updatedClient = clientService.updateClient(id, client);
+    public ResponseEntity<ClientDto> updateClient(@PathVariable Long id, @RequestBody ClientDto clientDto) {
+        // Проверяем существование клиента
+        if (!clientService.getClientById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        clientDto.setId(id);
+        ClientDto updatedClient = clientService.saveClient(clientDto);
         return ResponseEntity.ok(updatedClient);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+        if (!clientService.getClientById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
     }
