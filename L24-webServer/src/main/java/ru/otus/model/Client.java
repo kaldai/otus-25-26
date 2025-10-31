@@ -25,9 +25,11 @@ public class Client {
         this.name = name;
     }
 
-    public Client(Long id, String name) {
+    public Client(Long id, String name, Address address, Set<Phone> phones) {
         this.id = id;
         this.name = name;
+        this.address = address;
+        this.phones = phones != null ? phones : new HashSet<>();
     }
 
     // Геттеры и сеттеры
@@ -61,5 +63,9 @@ public class Client {
 
     public void setPhones(Set<Phone> phones) {
         this.phones = phones;
+    }
+
+    public void addPhone(Phone phone) {
+        this.phones.add(phone);
     }
 }

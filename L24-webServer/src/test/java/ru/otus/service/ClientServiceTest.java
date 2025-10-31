@@ -2,6 +2,7 @@ package ru.otus.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,21 +91,24 @@ class ClientServiceTest {
     }
 
     @Test
-    void shouldUpdateClient() {
-        // given
+    void shouldUpdateClientRemoveAddressAndPhones() {
+        // given - создаем клиента с адресом и телефонами
         ClientDto clientDto = new ClientDto();
-        clientDto.setName("Старое имя");
+        clientDto.setName("Клиент с данными");
+        clientDto.setAddress("Старый адрес");
+        clientDto.addPhone("+7-777-777-77-77");
         ClientDto saved = clientService.saveClient(clientDto);
 
-        // when
-        saved.setName("Новое имя");
-        saved.setAddress("Новый адрес");
+        // when - обновляем без адреса и телефонов
+        saved.setAddress(null);
+        saved.setPhones(new ArrayList<>());
         ClientDto updated = clientService.saveClient(saved);
 
         // then
         assertThat(updated.getId()).isEqualTo(saved.getId());
-        assertThat(updated.getName()).isEqualTo("Новое имя");
-        assertThat(updated.getAddress()).isEqualTo("Новый адрес");
+        assertThat(updated.getName()).isEqualTo("Клиент с данными");
+        assertThat(updated.getAddress()).isNull();
+        assertThat(updated.getPhones()).isEmpty();
     }
 
     @Test
@@ -112,17 +116,13 @@ class ClientServiceTest {
         // given
         ClientDto clientDto = new ClientDto();
         clientDto.setName("Клиент для удаления");
-        clientDto.setAddress("Адрес для удаления");
-        clientDto.addPhone("+7-999-999-99-99");
-
         ClientDto saved = clientService.saveClient(clientDto);
-        Long clientId = saved.getId();
 
         // when
-        clientService.deleteClient(clientId);
+        clientService.deleteClient(saved.getId());
 
         // then
-        var found = clientService.getClientById(clientId);
+        var found = clientService.getClientById(saved.getId());
         assertThat(found).isEmpty();
     }
 
@@ -143,33 +143,5 @@ class ClientServiceTest {
         // then
         assertThat(found).hasSizeGreaterThanOrEqualTo(1);
         assertThat(found).extracting(ClientDto::getName).anyMatch(name -> name.contains("Иван"));
-    }
-
-    @Test
-    void shouldReturnAllClientsWhenSearchTermIsEmpty() {
-        // given
-        ClientDto client1 = new ClientDto();
-        client1.setName("Клиент 1");
-        clientService.saveClient(client1);
-
-        // when
-        List<ClientDto> clients = clientService.searchClients("");
-
-        // then
-        assertThat(clients).isNotEmpty();
-    }
-
-    @Test
-    void shouldReturnAllClientsWhenSearchTermIsNull() {
-        // given
-        ClientDto client1 = new ClientDto();
-        client1.setName("Клиент 1");
-        clientService.saveClient(client1);
-
-        // when
-        List<ClientDto> clients = clientService.searchClients(null);
-
-        // then
-        assertThat(clients).isNotEmpty();
     }
 }

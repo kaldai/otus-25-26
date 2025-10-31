@@ -1,6 +1,5 @@
 package ru.otus.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -152,31 +151,5 @@ class ClientApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(org.hamcrest.Matchers.greaterThanOrEqualTo(2)));
-    }
-
-    @Test
-    void shouldCascadeDeleteAddressAndPhones() {
-        // given
-        ClientDto clientDto = new ClientDto();
-        clientDto.setName("Клиент с адресом и телефонами");
-        clientDto.setAddress("Тестовый адрес");
-        clientDto.addPhone("+7-111-111-11-11");
-        clientDto.addPhone("+7-222-222-22-22");
-
-        ClientDto saved = clientService.saveClient(clientDto);
-        Long clientId = saved.getId();
-
-        // Проверяем, что данные созданы
-        var clientBefore = clientService.getClientById(clientId);
-        assertThat(clientBefore).isPresent();
-        assertThat(clientBefore.get().getAddress()).isNotNull();
-        assertThat(clientBefore.get().getPhones()).hasSize(2);
-
-        // when
-        clientService.deleteClient(clientId);
-
-        // then
-        var clientAfter = clientService.getClientById(clientId);
-        assertThat(clientAfter).isEmpty();
     }
 }

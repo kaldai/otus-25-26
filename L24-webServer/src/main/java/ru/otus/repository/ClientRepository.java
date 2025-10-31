@@ -8,6 +8,8 @@ import ru.otus.model.Client;
 
 public interface ClientRepository extends CrudRepository<Client, Long> {
 
+    List<Client> findByNameContainingIgnoreCase(String name);
+
     @Query("SELECT * FROM CLIENT WHERE UPPER(NAME) LIKE UPPER(CONCAT('%', :name, '%'))")
-    List<Client> findByNameContainingIgnoreCase(@Param("name") String name);
+    List<Client> customFindByName(@Param("name") String name);
 }

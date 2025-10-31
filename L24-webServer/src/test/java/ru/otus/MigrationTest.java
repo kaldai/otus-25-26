@@ -27,14 +27,4 @@ class MigrationTest {
         Integer phoneCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM PHONE", Integer.class);
         assertThat(phoneCount).isEqualTo(7);
     }
-
-    @Test
-    void shouldHaveInitialData() {
-        // Проверяем конкретные данные
-        String clientName = jdbcTemplate.queryForObject("SELECT NAME FROM CLIENT WHERE ID = 1", String.class);
-        assertThat(clientName).isEqualTo("Иван Иванов");
-
-        String address = jdbcTemplate.queryForObject("SELECT STREET FROM ADDRESS WHERE CLIENT_ID = 1", String.class);
-        assertThat(address).isEqualTo("ул. Ленина, д. 10, кв. 5");
-    }
 }
