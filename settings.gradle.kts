@@ -63,7 +63,7 @@ include("L25-di:hw-multiplication-trainer")
 include ("L31-executors")
 //
 //include ("L32-concurrentCollections:ConcurrentCollections")
-//include ("L32-concurrentCollections:QueueDemo")
+include ("L32-concurrentCollections:QueueDemo")
 //
 //include ("L33-virtualThreads:base")
 //include ("L33-virtualThreads:springBoot")
