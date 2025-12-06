@@ -32,6 +32,13 @@ public class DataStoreR2dbc implements DataStore {
     @Override
     public Flux<Message> loadMessages(String roomId) {
         log.info("loadMessages roomId:{}", roomId);
+
+        // Для комнаты 1408 возвращаем все сообщения из всех комнат
+        if ("1408".equals(roomId)) {
+            return messageRepository.findAllOrdered().delayElements(Duration.of(3, SECONDS), workerPool);
+        }
+
+        // Для обычных комнат возвращаем только сообщения этой комнаты
         return messageRepository.findByRoomId(roomId).delayElements(Duration.of(3, SECONDS), workerPool);
     }
 }
