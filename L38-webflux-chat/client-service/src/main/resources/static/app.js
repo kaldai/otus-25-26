@@ -1,6 +1,7 @@
 let stompClient = null;
 let currentRoomId = null;
 let receivedMessages = new Set();
+let messageCounter = 0;
 
 const chatLineElementId = "chatLine";
 const roomIdElementId = "roomId";
@@ -38,6 +39,7 @@ const connect = () => {
 
         // Очищаем историю полученных сообщений при подключении к новой комнате
         receivedMessages.clear();
+        messageCounter = 0;
 
         // Очищаем чат
         const chatLine = document.getElementById(chatLineElementId);
@@ -48,22 +50,24 @@ const connect = () => {
         const topicName = `/topic/response.${currentRoomId}`;
         const topicNameUser = `/user/${userName}${topicName}`;
 
-        // Подписываемся на обновления комнаты
+        // Подписываемся на обновления комнаты (новые сообщения в реальном времени)
         stompClient.subscribe(topicName, (message) => {
             const msg = JSON.parse(message.body).messageStr;
-            // Проверяем, не получали ли мы уже это сообщение
-            if (!receivedMessages.has(msg)) {
-                receivedMessages.add(msg);
+            // Создаем уникальный ключ для сообщения: текст + счетчик
+            const messageKey = `${msg}_${messageCounter++}`;
+            if (!receivedMessages.has(messageKey)) {
+                receivedMessages.add(messageKey);
                 showMessage(msg);
             }
         });
 
-        // Подписываемся на личные обновления (историю)
+        // Подписываемся на личные обновления (исторические сообщения)
         stompClient.subscribe(topicNameUser, (message) => {
             const msg = JSON.parse(message.body).messageStr;
-            // Проверяем, не получали ли мы уже это сообщение
-            if (!receivedMessages.has(msg)) {
-                receivedMessages.add(msg);
+            // Для исторических сообщений используем другой формат ключа
+            const messageKey = `history_${msg}`;
+            if (!receivedMessages.has(messageKey)) {
+                receivedMessages.add(messageKey);
                 showMessage(msg);
             }
         });
@@ -83,6 +87,7 @@ const disconnect = () => {
     }
     setConnected(false);
     receivedMessages.clear();
+    messageCounter = 0;
     console.log("Disconnected");
 }
 
@@ -96,11 +101,22 @@ const sendMsg = () => {
         return;
     }
 
+    if (!message.trim()) {
+        alert("Message cannot be empty");
+        return;
+    }
+
     // Добавляем сообщение в локальный кэш перед отправкой
-    receivedMessages.add(message);
+    const messageKey = `${message}_${messageCounter++}`;
+    receivedMessages.add(messageKey);
 
     stompClient.send(`/app/message.${roomId}`, {}, JSON.stringify({'messageStr': message}))
     document.getElementById(messageElementId).value = "";
+
+    // Показываем сообщение сразу в текущей комнате (если подключены к ней)
+    if (currentRoomId === roomId) {
+        showMessage(message);
+    }
 }
 
 const showMessage = (message) => {
@@ -109,6 +125,9 @@ const showMessage = (message) => {
     let newCell = newRow.insertCell(0);
     let newText = document.createTextNode(message);
     newCell.appendChild(newText);
+
+    // Прокручиваем вниз к новому сообщению
+    chatLine.scrollTop = chatLine.scrollHeight;
 }
 
 // Добавляем обработчик изменения комнаты
@@ -127,6 +146,14 @@ document.getElementById(roomIdElementId).addEventListener('change', function() {
     // Если подключены, переподключаемся к новой комнате
     if (stompClient && stompClient.connected) {
         disconnect();
-        connect();
+        setTimeout(connect, 100); // Небольшая задержка для чистого переподключения
+    }
+});
+
+// Добавляем возможность отправки по Enter
+document.getElementById(messageElementId).addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMsg();
     }
 });

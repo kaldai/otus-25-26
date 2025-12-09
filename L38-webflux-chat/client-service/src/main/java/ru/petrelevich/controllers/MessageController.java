@@ -45,9 +45,18 @@ public class MessageController {
         // Сохраняем сообщение и подписываемся на результат
         saveMessage(roomId, message).subscribe(msgId -> {
             logger.info("message saved with id:{}", msgId);
+
+            String senderRoomTopic = String.format("%s%s", TOPIC_TEMPLATE, roomId);
             template.convertAndSend(
-                    String.format("%s%s", TOPIC_TEMPLATE, roomId),
+                    senderRoomTopic,
                     new Message(HtmlUtils.htmlEscape(message.messageStr())));
+
+            String room1408Topic = String.format("%s%s", TOPIC_TEMPLATE, SPECIAL_ROOM);
+            template.convertAndSend(
+                    room1408Topic,
+                    new Message(HtmlUtils.htmlEscape(message.messageStr())));
+
+            logger.debug("Message sent to room {} and room 1408", roomId);
         });
     }
 
@@ -72,17 +81,26 @@ public class MessageController {
         }
 
         logger.info("subscription for:{}, roomId:{}, user:{}", simpDestination, roomId, principal.getName());
-        // /user/f6532733-51db-4d0e-bd00-1267dddc7b21/topic/response.1
-        // Если это подписка на комнату 1408, загружаем все сообщения
-        getMessagesByRoomId(roomId)
-                .doOnError(ex -> logger.error("getting messages for roomId:{} failed", roomId, ex))
-                .subscribe(message -> {
-                    logger.debug("Sending historical message to user: {}", message.messageStr());
-                    template.convertAndSendToUser(principal.getName(), simpDestination, message);
-                });
+
+        if (SPECIAL_ROOM.equals(roomId)) {
+            getAllMessages()
+                    .doOnError(ex -> logger.error("getting all messages for roomId:{} failed", roomId, ex))
+                    .subscribe(message -> {
+                        logger.debug("Sending message to room 1408: {}", message.messageStr());
+                        template.convertAndSendToUser(principal.getName(), simpDestination, message);
+                    });
+        } else {
+            getMessagesByRoomId(roomId)
+                    .doOnError(ex -> logger.error("getting messages for roomId:{} failed", roomId, ex))
+                    .subscribe(message -> {
+                        logger.debug("Sending message to room {}: {}", roomId, message.messageStr());
+                        template.convertAndSendToUser(principal.getName(), simpDestination, message);
+                    });
+        }
     }
 
     private Mono<Long> saveMessage(String roomId, Message message) {
+        logger.info("Saving message to room: {}", roomId);
         return datastoreClient
                 .post()
                 .uri(String.format("/msg/%s", roomId))
@@ -90,7 +108,6 @@ public class MessageController {
                 .bodyValue(message)
                 .exchangeToMono(response -> {
                     if (response.statusCode().equals(HttpStatus.FORBIDDEN)) {
-                        // Игнорируем ошибку для комнаты 1408
                         logger.warn("Cannot save message for room {}", roomId);
                         return Mono.just(-1L);
                     }
@@ -109,6 +126,23 @@ public class MessageController {
                         return response.bodyToFlux(Message.class);
                     } else {
                         logger.error("Failed to get messages for room {}, status: {}", roomId, response.statusCode());
+                        return response.createException().flatMapMany(Mono::error);
+                    }
+                });
+    }
+
+    // Новый метод для получения ВСЕХ сообщений (для комнаты 1408)
+    private Flux<Message> getAllMessages() {
+        logger.info("Getting all messages for room 1408");
+        return datastoreClient
+                .get()
+                .uri("/msg/all")
+                .accept(MediaType.APPLICATION_NDJSON)
+                .exchangeToFlux(response -> {
+                    if (response.statusCode().equals(HttpStatus.OK)) {
+                        return response.bodyToFlux(Message.class);
+                    } else {
+                        logger.error("Failed to get all messages, status: {}", response.statusCode());
                         return response.createException().flatMapMany(Mono::error);
                     }
                 });
