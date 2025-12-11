@@ -42,22 +42,25 @@ public class MessageController {
             return;
         }
 
-        // Сохраняем сообщение и подписываемся на результат
-        saveMessage(roomId, message).subscribe(msgId -> {
-            logger.info("message saved with id:{}", msgId);
+      // Сначала отправляем сообщение в комнату отправителя
+      String senderRoomTopic = String.format("%s%s", TOPIC_TEMPLATE, roomId);
+      template.convertAndSend(
+          senderRoomTopic,
+          new Message(HtmlUtils.htmlEscape(message.messageStr())));
 
-            String senderRoomTopic = String.format("%s%s", TOPIC_TEMPLATE, roomId);
-            template.convertAndSend(
-                    senderRoomTopic,
-                    new Message(HtmlUtils.htmlEscape(message.messageStr())));
+      // Отправляем сообщение в комнату 1408
+      String room1408Topic = String.format("%s%s", TOPIC_TEMPLATE, SPECIAL_ROOM);
+      template.convertAndSend(
+          room1408Topic,
+          new Message(HtmlUtils.htmlEscape(message.messageStr())));
 
-            String room1408Topic = String.format("%s%s", TOPIC_TEMPLATE, SPECIAL_ROOM);
-            template.convertAndSend(
-                    room1408Topic,
-                    new Message(HtmlUtils.htmlEscape(message.messageStr())));
+      logger.debug("Message sent to room {} and room 1408", roomId);
 
-            logger.debug("Message sent to room {} and room 1408", roomId);
-        });
+      // Асинхронно сохраняем сообщение в базу данных (не ждем результата)
+      saveMessage(roomId, message).subscribe(
+          msgId -> logger.info("message saved with id:{}", msgId),
+          error -> logger.error("Failed to save message", error)
+      );
     }
 
     @EventListener
