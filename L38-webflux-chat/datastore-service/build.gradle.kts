@@ -1,6 +1,16 @@
+plugins {
+    java
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+}
+
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation ("com.google.code.findbugs:jsr305")
+    implementation("com.google.code.findbugs:jsr305")
 
     implementation("io.r2dbc:r2dbc-postgresql")
     implementation("org.postgresql:postgresql")
